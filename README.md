@@ -126,10 +126,10 @@ public class TripService {
 	@Autowired
 	private PlaneBook planeBook;
     
-    @Transactional
+    	@Transactional
 	@Tcc
 	public void createTrip(String orderId){
-        System.out.println("BEGIN db-trans...");
+        	System.out.println("BEGIN db-trans...");
 		staffService.addStaff(orderId);//简单的本地数据库操作
 		System.out.println("BEGIN remote...");
 		eatBook.bookEat(TccPhaseEnum.Try,null,orderId);
