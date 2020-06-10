@@ -20,8 +20,6 @@ tcc-mini** is an very simple implementation of Distributed Transaction Manager, 
 
 #### 1.1 Add maven depenency
 
-###### 1.1.1. Spring boot
-
 ```
 		<dependency>
 			<groupId>com.so-mini</groupId>
@@ -30,9 +28,9 @@ tcc-mini** is an very simple implementation of Distributed Transaction Manager, 
 		</dependency>
 ```
 
-###### 1.2 Add participant services
+#### 1.2 Add participant services
 
-**1st service**
+##### **1st service**
 
 ```java
 @Service
@@ -59,7 +57,7 @@ public class EatBook {
 }
 ```
 
-**2rd service**
+##### **2rd service**
 
 ```JAVA
 @Service
@@ -91,7 +89,7 @@ public class HouseBook {
 }
 ```
 
-**3rd service**
+##### **3rd service**
 
 ```java
 @Service
@@ -116,7 +114,7 @@ public class PlaneBook {
 }
 ```
 
-**aggregation service**(聚合服务)
+##### **aggregation service**(聚合服务)
 
 ```java
 @Service
@@ -141,7 +139,7 @@ public class TripService {
 }
 ```
 
-**listen the confirm/cancel failure**
+#### **1.3 listen the confirm/cancel failure**
 
 ```java
 @Component
@@ -154,9 +152,13 @@ public class FailCCDispatcherListener implements CCFailListener{
 }
 ```
 
-**sample result**
+#### **1.4 result sample **
 
 ```java
+//第三个TCC出错，前两个执行CANCEL，本地DB事务回滚
+BEGIN db-trans...
+Hibernate: select staffbo0_.id .....
+BEGIN remote...
 Eat book...!//第一个参与者 try
 [bookEat] return value:null//try 的 返回值
 house book...!//第二个参与者 try
@@ -165,6 +167,26 @@ house book...!//第二个参与者 try
 Eat cnacel...!//第一个参与者
 house cancel...!HS100083//第二个参与者 cancel使用了try的结果
 【threadLocal removed!】//all finished
+java.lang.RuntimeException: TCC异常
+```
+
+```java
+//正常情况
+BEGIN db-trans...
+Hibernate: select staffbo0_.id ...
+BEGIN remote...
+Eat book...!
+[bookEat] return value:null
+house book...!
+[bookHouse] return value:HS100083
+plane booked!
+[bookPlane] return value:null
+【正常,需确认数】3
+Eat confirm...!
+house confirm...!HS100083
+plane confirmed!
+【threadLocal removed!】
+Hibernate: insert into staff (age, name, id) values (?, ?, ?)
 ```
 
 
