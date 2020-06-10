@@ -4,7 +4,7 @@
 
 主要特点：
 
-- 非常简单的框架，但有结构约定，可以在CONFIRM/CANCEL中使用TRY的返回值
+- 非常简单的框架，但有结构约定，**以一种投机取巧的方式处理TCC调用的切换与TRY返回值的使用
 - 可以实现本地与所有TCC参与者TRY都成功了进行CONFIRM，任何失败都将CANCEL，本地事务回滚
 - 对于CONFIRM/CANCEL的失败，由使用者开发实现CCFailListener的接口来处理
 
