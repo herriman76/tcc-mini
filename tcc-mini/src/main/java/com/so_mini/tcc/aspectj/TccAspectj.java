@@ -70,8 +70,8 @@ public class TccAspectj {
             for(ProceedingJoinPoint pj:participant){
 				toCancle(pj,_CCFailListenerList);
             }
-//            throw new RuntimeException(e);
-            return null;
+            throw new RuntimeException("TCC异常");
+//            return null;
         }
         finally{
         //后置通知
